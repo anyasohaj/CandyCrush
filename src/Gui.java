@@ -16,6 +16,8 @@ public class Gui {
 	//private ArrayList<ArrayList<Button>> gameButtons = new ArrayList<>();
 	private GameTable table;
 	private Game game;
+	private int pressedButtonCounter = 0;
+	Step step;
 
 	
 	
@@ -34,35 +36,13 @@ public class Gui {
 		
 		handout(currentStateOfTable);
         frame.setVisible(true);
+        
    
 	}
 	
 	
 	public  void actionHandler(Button pressedButton){
-		System.out.println("\nActionHandler starts. PressedButton: " + pressedButton.getButtonCoord().toString());
-		
-		if (game.firstPressed == null){
-			System.out.println("FirstPressed is null");
-			game.firstPressed = pressedButton;
-			game.firstPressed.getModel().setPressed(true);
-					
-		}else if (!game.firstPressed.equals(pressedButton)) {
-			if (game.firstPressed.isNextTo(pressedButton)){
-				System.out.println("FirstPressed isNextTo pressedButton");
-				game.firstPressed.getModel().setPressed(true);
-				game.secondPressed = pressedButton;
-				System.out.println("FirstPressed: " + game.firstPressed.toString() + "SecondPressed: " + game.secondPressed.toString());
-				game.secondPressed.getModel().setPressed(true);
-			}else{
-				game.firstPressed.getModel().setPressed(false);
-				game.firstPressed = pressedButton;
-			}
-		}
-		if(game.secondPressed != null){
-			Main.controller(game);
-		}
-				
-	
+		step.read(pressedButton);
 	}
 	
 
@@ -99,6 +79,7 @@ public class Gui {
 			}
 		
 		}
+		step = new Step(game);
 	}
 	
 	

@@ -1,19 +1,14 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Scanner;
 
 public class Game {
 	static GameTable gameTable;
 	private Level level;
-	Button firstPressed;
-	Button secondPressed; 
 	boolean secondCounting = false;
 	boolean isEdible = false;
 	int deletableElementCounterX ;
 	int deletableElementCounterY;
 	int pointCounter;
 	int stepCounter;
-	private Scanner scanner = new Scanner(System.in);
+	
 	
 	public Game (GameTable table, int levelNumber){
 		this.gameTable = table;
@@ -28,17 +23,18 @@ public class Game {
 		this.stepCounter = level.getSteps();
 	}
 		
-	public void start(){
+	public void start(Step step){
+	
 		deletableElementCounterX = 1;
 		deletableElementCounterY = 1;
 		
-			replaceWith(firstPressed, secondPressed);
+			replaceWith(step.firstButton, step.secondButton);
 			
-			if (isEdible()){
+			if (isEdible(step.firstButton,step.secondButton)){
 				deleteCandies();	
 			}else{
 				System.out.println(" Nem törölhetõ, úgyhogy visszacserélem.");
-				replaceWith(firstPressed, secondPressed);
+				replaceWith(step.firstButton, step.secondButton);
 				
 			}
 	
@@ -46,7 +42,7 @@ public class Game {
 		
 		secondCounting = false;
 		System.out.println("Itt állt le a start()");
-		
+		Main.gui.handout(gameTable.getCurrentStateOfTable());
 	}
 	
 	
@@ -66,14 +62,16 @@ public class Game {
 			System.out.println(" Csere után button1: " + button1.getButtonCoord().toString() + " button2: " + button2.getButtonCoord().toString());
 	}
 	
-	public boolean isEdible(){
+	public boolean isEdible(Button firstPressed, Button secondPressed){
 		
-		int firstCandyColor = this.firstPressed.getButtonCandyColor();
-		int secondCandyColor = this.secondPressed.getButtonCandyColor();
-		int x1 = this.firstPressed.getButtonCoord().x;
-		int y1 = this.firstPressed.getButtonCoord().y;
-		int x2 = this.secondPressed.getButtonCoord().x;
-		int y2 = this.secondPressed.getButtonCoord().y;
+		System.out.println("isEdible() starts");
+		
+		int firstCandyColor = firstPressed.getButtonCandyColor();
+		int secondCandyColor = secondPressed.getButtonCandyColor();
+		int x1 = firstPressed.getButtonCoord().x;
+		int y1 = firstPressed.getButtonCoord().y;
+		int x2 = secondPressed.getButtonCoord().x;
+		int y2 = secondPressed.getButtonCoord().y;
 		
 		System.out.println("FirstPressed: " + firstPressed.toString());		
 		System.out.println("SecondPressed: " + secondPressed.toString());
@@ -87,11 +85,13 @@ public class Game {
 		System.out.println("A második gomb koordinátái: (" + x2 + " ; " + y2 + " )");
 		edibleElementCounter(x2, y2, secondCandyColor);
 		
+		System.out.println("isEdible() ends");
 		return isEdible;
 	
 	}
 
 	void deleteCandies(){
+		System.out.println("deleteCandies() starts");
 
 		for (int i = 0; i <  gameTable.getTableSize(); i++){
 			for (int j = gameTable.getTableSize() - 1; j>=0 ; j--){
@@ -123,7 +123,8 @@ public class Game {
 			}
 		}
 		gameTable.patchStateOfButtons();
-		Main.controller(this);
+		System.out.println("deleteCandies() starts");
+		//Main.controller(this);
 		
 		System.out.println("You have now " + pointCounter + " points. " + stepCounter + " steps remain.");
 		
@@ -266,11 +267,8 @@ public class Game {
 				}
 			}
 		
-		
+	}
 	}
 	
-	
-
-}
 
 
